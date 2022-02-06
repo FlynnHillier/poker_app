@@ -1,0 +1,31 @@
+{
+  "name": "building-a-user-base",
+  "version": "0.0.2",
+  "description": "",
+  "main": "initialise.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node initialise.js",
+    "debug": "nodemon initialise.js --ignore globals.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.1",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.17.2",
+    "express-session": "^1.17.2",
+    "express-sessions": "^1.0.6",
+    "jslint": "^0.12.1",
+    "mongodb": "^4.3.1",
+    "mongoose": "^6.2.0",
+    "nodemon": "^2.0.15",
+    "path": "^0.12.7",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "eslint-config-google": "^0.14.0"
+  }
+}

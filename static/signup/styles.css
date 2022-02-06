@@ -1,0 +1,14 @@
+div#signup_form input {
+    display: block;
+}
+
+
+
+
+body{
+    font-family: sans-serif;
+}
+
+.error_message{
+    color:red;
+}
