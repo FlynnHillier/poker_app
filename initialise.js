@@ -170,7 +170,7 @@ const init_result = new Promise((resolve,reject)=>{
         throw err
     }
     
-    // loading_message(`listening on port ${PORT}`)
+    loading_message(`listening on port ${PORT}`)
 
 })
 .catch((rejection)=>{

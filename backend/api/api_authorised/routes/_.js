@@ -14,7 +14,6 @@ Router
 
         res.status(200).send({
             result:true,
-            userID:req.session.userID
         })
         
         

@@ -9,19 +9,22 @@ function login_submit(){
     }
 
 
-    let req_body = JSON.stringify({
+    let req_body ={
         username:username,
         password:password
-    })
-
-    fetch("/api/open/login",{
-        method:"POST",
-        body:req_body,
-        headers:{
-            "content-type":"application/json"
     }
-    })
 
+    axios.post("/api/open/login",req_body)
+    .then((response)=>{
+        if(response.data.result === true){
+            window.location.replace(response.data.next_url)
+        }  else{
+            document.getElementById("login_error_message").innerText = response.data.message
+        }
+    })
+    .catch((err)=>{
+        throw err
+    })
 
 
 

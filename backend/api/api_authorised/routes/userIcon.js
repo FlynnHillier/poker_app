@@ -16,7 +16,10 @@ Router
     .route("/")
     .get((req,res)=>{
 
-        res.status(200).send(req.session.userID)
+        res.status(200).send({
+            result:true,
+            
+        })
         
         
     })

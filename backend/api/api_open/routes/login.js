@@ -12,13 +12,12 @@ Router
     .route("/")
     .get((req,res)=>{
 
-        console.log("this is happening")
-
         res.status(200).sendFile(path.join(config.static_dir,"login","index.html"))
     })
     .post((req,res)=>{
         const username = req.body.username
         const password = req.body.password
+
         
         if(!username || !password){
             res.status(403).send()
@@ -33,12 +32,14 @@ Router
 
             if(userInfo){
 
-                if(userInfo.password = password){
+
+                if(userInfo.password == password){
 
                     req.session.userID = userInfo.username
                     req.session.isAuth = true
                     res.status(200).send({
                         result:true,
+                        next_url:"/dashboard",
                         message:"Successfully logged in"
                     })
                 } else{

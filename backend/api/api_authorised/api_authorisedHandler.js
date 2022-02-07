@@ -13,18 +13,22 @@ function api_authorised_handler(mongoClient,globals){
     let api_authorised_router = express.Router()
     
 
-    const users = require("./routes/user.js")(mongoClient,globals)
-    
+    const user = require("./routes/user.js")(mongoClient,globals)
+    const base = require("./routes/_.js")(mongoClient,globals)
 
     api_authorised_router
         .use((req,res,next)=>{
             if(!req.session.isAuth){
-                res.status(401).send()
+                res.status(200).send({
+                    result:false,
+                    next_url:"/login"
+                })
             } else{
                 next()
             }
         }) 
-        .use("/user",users)
+        .use("/user",user)
+        .use("/",base)
     
 
     return api_authorised_router
