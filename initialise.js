@@ -14,14 +14,16 @@ function globals_init(globals_dir,globals_config){
 }
 
 
-function establish_mongoDB_connection(mongoClient,timeout=4000){
+function establish_mongoDB_connection(mongoose_object,mongoDB_access_uri,mongoose_boot_config){
     return new Promise((resolve,reject)=>{
 
-        mongoClient.connect().then(()=>{
+        mongoose_object.connect(mongoDB_access_uri,mongoose_boot_config).then(()=>{
+            console.log("then")
             resolve("Successfully established a connection to mongoDB client.")
             //mongoClient.close()
-        }).catch((rejection)=>{
-            reject({message:`The mongoDB client was unresponsive after: ${mongoClient_connection_config.serverSelectionTimeoutMS}ms.`})
+        }).catch((error)=>{
+            console.log("catch")
+            reject({message:`The mongoDB client was unresponsive after: ${mongoose_boot_config.serverSelectionTimeoutMS}ms.`,error:error})
         })
 
 
@@ -93,6 +95,7 @@ const {join} = require("path")
 const express = require("express")
 const { MongoClient } = require("mongodb")
 
+const mongoose = require("mongoose")
 
 
 //**SETTINGS VARIABLES**
@@ -110,7 +113,9 @@ const mongoClient_connection_config = {
     connectTimeoutMS: 5000,
     serverSelectionTimeoutMS: 2000
 }
-const mongoClient = new MongoClient(mongoDB_access_uri,mongoClient_connection_config)
+
+
+//const mongoClient = new mongoose(mongoDB_access_uri,mongoClient_connection_config)
 
 //globals
 const GLOBALS_DIR = process.cwd()
@@ -130,7 +135,7 @@ const init_result = new Promise((resolve,reject)=>{
     globals_init(GLOBALS_DIR,GLOBALS_CONFIG)
     .then((resolution)=>{
 
-        establish_mongoDB_connection(mongoClient)
+        establish_mongoDB_connection(mongoose,mongoDB_access_uri,mongoClient_connection_config)
         .then((resolution)=>{
 
             listen(app,PORT,listen_retry_attempts,listen_retry_delay,listen_silent)
@@ -164,7 +169,7 @@ const init_result = new Promise((resolve,reject)=>{
 
     try{
     
-    require(join(GLOBALS_CONFIG.backend_dir,"RouteHandler.js"))(mongoClient,app,GLOBALS_CONFIG)
+    require(join(GLOBALS_CONFIG.backend_dir,"RouteHandler.js"))(mongoose,app,GLOBALS_CONFIG)
     }
     catch(err){
         throw err
