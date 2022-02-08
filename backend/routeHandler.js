@@ -14,7 +14,7 @@ function route_handler(mongoClient,app,globals){
 
     
 
-
+    console.log("testing branches")
 
 
     //** ROUTES **
