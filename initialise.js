@@ -18,7 +18,6 @@ function establish_mongoDB_connection(mongoose_object,mongoDB_access_uri,mongoos
     return new Promise((resolve,reject)=>{
 
         mongoose_object.connect(mongoDB_access_uri,mongoose_boot_config).then(()=>{
-            console.log("then")
             resolve("Successfully established a connection to mongoDB client.")
             //mongoClient.close()
         }).catch((error)=>{
@@ -123,9 +122,9 @@ const GLOBALS_CONFIG = {
     backend_dir:join(process.cwd(),"backend"),
     static_dir:join(process.cwd(),"static"),
     routes_dir:join(process.cwd(),"backend","routes"),
-    mongoDB_access_uri:mongoDB_access_uri
+    mongoDB_access_uri:mongoDB_access_uri,
+    mongoose_models: require("./mongoose_models.js")
 }
-
 
 
 //**INITIALISE **
