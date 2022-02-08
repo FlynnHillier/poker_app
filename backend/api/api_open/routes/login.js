@@ -1,7 +1,8 @@
 const path = require("path")
 const express = require("express")
+const { mongo } = require("mongoose")
 
-module.exports = function(mongoClient,config){
+module.exports = function(mongoose,config){
 
 
 let Router = express.Router()
@@ -24,12 +25,10 @@ Router
             return
         }
 
-        const standard_users = mongoClient.db("users").collection("standard_users")
 
+        
 
-       standard_users.findOne({username:username})
-        .then((userInfo)=>{
-
+       config.mongoose_models.user.findOne({username:"mrbasu"}).then((userInfo)=>{
             if(userInfo){
 
 
@@ -57,8 +56,11 @@ Router
                 })
 
             }
-
-        }).catch((err)=>{
+        
+        })
+        .catch((err)=>{
+            console.log("error:!")
+            console.log(err)
             res.status(503).send({message:"error searching database for login credentials",error:err})
         })
 
