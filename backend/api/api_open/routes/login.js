@@ -2,7 +2,7 @@ const path = require("path")
 const express = require("express")
 const { mongo } = require("mongoose")
 
-module.exports = function(mongoose,config){
+module.exports = function(mongoose_instance,config){
 
 
 let Router = express.Router()
@@ -13,7 +13,7 @@ Router
     .route("/")
     .get((req,res)=>{
 
-        res.status(200).sendFile(path.join(config.static_dir,"login","index.html"))
+        res.status(200).sendFile(path.join(config.directories.static,"login","index.html"))
     })
     .post((req,res)=>{
         const username = req.body.username
@@ -28,7 +28,7 @@ Router
 
         
 
-       config.mongoose_models.user.findOne({username:"mrbasu"}).then((userInfo)=>{
+       config.mongo.mongoose_models.user.findOne({username:"mrbasu"}).then((userInfo)=>{
             if(userInfo){
 
 

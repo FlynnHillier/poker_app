@@ -1,19 +1,3 @@
-function globals_init(globals_dir,globals_config){
-    return new Promise((resolve,reject)=>{
-    
-            const {writeFileSync} = require("fs")
-            const {join} = require("path")
-
-        try{
-            writeFileSync(join(globals_dir,"globals.json"),JSON.stringify(globals_config))
-            resolve({message:`Successfully updated '${join(globals_dir,"globals.json")}' with config: \n ${globals_config}`})
-        } catch(err){
-            reject({message:`Error writing to file '${join(globals_dir,"globals.json")}'`,error:err})
-        }  
-    })
-}
-
-
 function establish_mongoDB_connection(mongoose_object,mongoDB_access_uri,mongoose_boot_config){
     return new Promise((resolve,reject)=>{
 
@@ -92,54 +76,25 @@ function loading_message(message){
 //**REQUIRE MODULES**
 const {join} = require("path")
 const express = require("express")
-const { MongoClient } = require("mongodb")
-
 const mongoose = require("mongoose")
-
-
-//**SETTINGS VARIABLES**
-
-//express
 const app = express()
-const PORT = 5000
-const listen_retry_attempts = 3
-const listen_retry_delay = 4000
-const listen_silent = true
-
-//mongo
-const mongoDB_access_uri = "mongodb+srv://temporary:temp@cluster0.aq57b.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-const mongoClient_connection_config = {
-    connectTimeoutMS: 5000,
-    serverSelectionTimeoutMS: 2000
-}
 
 
-//const mongoClient = new mongoose(mongoDB_access_uri,mongoClient_connection_config)
+//**CONFIG**
+const { init_settings, global_config } = require("./config.js")
 
-//globals
-const GLOBALS_DIR = process.cwd()
-const GLOBALS_CONFIG = {
-    backend_dir:join(process.cwd(),"backend"),
-    static_dir:join(process.cwd(),"static"),
-    routes_dir:join(process.cwd(),"backend","routes"),
-    mongoDB_access_uri:mongoDB_access_uri,
-    mongoose_models: require("./mongoose_models.js")
-}
+
 
 
 //**INITIALISE **
 const loading_message_interval = loading_message("initialising application")
 const init_result = new Promise((resolve,reject)=>{
-
-    globals_init(GLOBALS_DIR,GLOBALS_CONFIG)
-    .then((resolution)=>{
-
-        establish_mongoDB_connection(mongoose,mongoDB_access_uri,mongoClient_connection_config)
+        establish_mongoDB_connection(mongoose,global_config.mongo.access_uri,init_settings.mongoClient_connection_config)
         .then((resolution)=>{
 
-            listen(app,PORT,listen_retry_attempts,listen_retry_delay,listen_silent)
+            listen(app,init_settings.port,init_settings.listen_retry_attempts,init_settings.listen_retry_delay,init_settings.listen_silent)
             .then((resolution)=>{
-                resolve({message:"application successfully initialised",info:{port:PORT,mongoDB_access_uri:mongoDB_access_uri,globals_dir:GLOBALS_DIR,globals_config:GLOBALS_CONFIG}})
+                resolve({message:"application successfully initialised",config:{init:init_settings,global:global_config}})
             })
             .catch((rejection)=>{
                 reject(rejection)
@@ -151,11 +106,6 @@ const init_result = new Promise((resolve,reject)=>{
         })
 
     })
-    .catch((rejection)=>{ //globals_init rejection
-        reject(rejection)
-    })
-
-})
 .finally(()=>{
     clearInterval(loading_message_interval)
     process.stdout.clearLine()
@@ -163,18 +113,19 @@ const init_result = new Promise((resolve,reject)=>{
 })
 .then((resolution)=>{
     console.log(resolution.message)
-    console.log(resolution.info)
+    console.log("\n**Init settings**:\n",resolution.config.init)
+    console.log("\n**Global settings**:\n",resolution.config.global)
 
 
     try{
     
-    require(join(GLOBALS_CONFIG.backend_dir,"RouteHandler.js"))(mongoose,app,GLOBALS_CONFIG)
+    require(join(global_config.directories.backend,"RouteHandler.js"))(mongoose,app,global_config)
     }
     catch(err){
         throw err
     }
     
-    loading_message(`listening on port ${PORT}`)
+    loading_message(`listening on port ${init_settings.port}`)
 
 })
 .catch((rejection)=>{

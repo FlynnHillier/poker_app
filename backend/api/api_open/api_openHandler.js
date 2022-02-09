@@ -1,6 +1,6 @@
 const express = require("express")
 
-function api_open_handler(mongoClient,globals){
+function api_open_handler(mongoose_instance,config){
 
 
     let api_open_router = express.Router()
@@ -8,8 +8,8 @@ function api_open_handler(mongoClient,globals){
     //** ROUTES **
 
 
-    const signup = require("./routes/signup.js")(mongoClient,globals)
-    const login = require("./routes/login.js")(mongoClient,globals)
+    const signup = require("./routes/signup.js")(mongoose_instance,config)
+    const login = require("./routes/login.js")(mongoose_instance,config)
 
 
     api_open_router

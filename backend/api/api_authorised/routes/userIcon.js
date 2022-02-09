@@ -5,7 +5,7 @@ const express = require("express")
 //NOT IN USE
 
 
-module.exports = function(mongoClient,config){
+module.exports = function(mongoose_instance,config){
 
 
 let Router = express.Router()
