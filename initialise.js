@@ -1,19 +1,3 @@
-function globals_init(globals_dir,globals_config){
-    return new Promise((resolve,reject)=>{
-    
-            const {writeFileSync} = require("fs")
-            const {join} = require("path")
-
-        try{
-            writeFileSync(join(globals_dir,"globals.json"),JSON.stringify(globals_config))
-            resolve({message:`Successfully updated '${join(globals_dir,"globals.json")}' with config: \n ${globals_config}`})
-        } catch(err){
-            reject({message:`Error writing to file '${join(globals_dir,"globals.json")}'`,error:err})
-        }  
-    })
-}
-
-
 function establish_mongoDB_connection(mongoose_object,mongoDB_access_uri,mongoose_boot_config){
     return new Promise((resolve,reject)=>{
 
@@ -130,10 +114,6 @@ const GLOBALS_CONFIG = {
 //**INITIALISE **
 const loading_message_interval = loading_message("initialising application")
 const init_result = new Promise((resolve,reject)=>{
-
-    globals_init(GLOBALS_DIR,GLOBALS_CONFIG)
-    .then((resolution)=>{
-
         establish_mongoDB_connection(mongoose,mongoDB_access_uri,mongoClient_connection_config)
         .then((resolution)=>{
 
@@ -151,11 +131,6 @@ const init_result = new Promise((resolve,reject)=>{
         })
 
     })
-    .catch((rejection)=>{ //globals_init rejection
-        reject(rejection)
-    })
-
-})
 .finally(()=>{
     clearInterval(loading_message_interval)
     process.stdout.clearLine()
