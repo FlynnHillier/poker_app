@@ -1,7 +1,7 @@
 const path = require("path")
 const express = require("express")
 
-module.exports = function(mongoClient,config){
+module.exports = function(mongoose_instance,config){
 
 
 let Router = express.Router()

@@ -1,7 +1,7 @@
 const express = require("express")
 const path = require("path")
 
-function signup(mongoClient,config){
+function signup(mongoose_instance,config){
 
     let Router = express.Router()
     // ** base **
@@ -22,13 +22,13 @@ function signup(mongoClient,config){
             
 
 
-            config.mongoose_models.user.findOne({username:username}).then((username_found_result) => {
+            config.mongo.mongoose_models.user.findOne({username:username}).then((username_found_result) => {
                 
                 if(username_found_result){
                     res.status(403).json({err:"User creation error, user already exists",message:"That username is unavailable"})
                 } else{
 
-                    new config.mongoose_models.user({
+                    new config.mongo.mongoose_models.user({
                         username:username,
                         password:password
                     }).save()

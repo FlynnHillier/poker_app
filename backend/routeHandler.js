@@ -6,7 +6,7 @@ const bodyparser = require("body-parser")
 const MongoStore = require('connect-mongo');
 
 
-function route_handler(mongoClient,app,globals){
+function route_handler(mongoose_instance,app,config){
 
     app.use(bodyparser.urlencoded({ extended: true }))
     app.use(bodyparser.json())
@@ -27,7 +27,7 @@ function route_handler(mongoClient,app,globals){
         cookie: { maxAge: 1000 * 60 * 60 *24 },
         resave: false,
         store: MongoStore.create({
-            mongoUrl:globals.mongoDB_access_uri,
+            mongoUrl:config.mongo.access_uri,
             ttl: 60*60*24*14,
             autoRemove: 'interval',
             autoRemoveInterval: 15
@@ -36,9 +36,9 @@ function route_handler(mongoClient,app,globals){
 
 
 
-    const api_handler = require("./api/apiHandler.js")(mongoClient,app,globals)
+    const api_handler = require("./api/apiHandler.js")(mongoose_instance,config)
     app.use("/api",api_handler)
-    app.use(express.static(globals.static_dir))
+    app.use(express.static(config.directories.static))
     app.use("*",(req,res)=>{
         res.status(404).send("404")
     })
