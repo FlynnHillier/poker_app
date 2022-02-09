@@ -19,6 +19,14 @@ function route_handler(mongoClient,app,globals){
 
     //** ROUTES **
 
+    
+    app.use(sessions({
+        secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+        saveUninitialized:true,
+        cookie: { maxAge: 1000 * 60 * 60 *24 },
+        resave: false
+    }))
+
 
 
     const api_handler = require("./api/apiHandler.js")(mongoClient,app,globals)
