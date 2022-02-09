@@ -29,6 +29,8 @@ function route_handler(mongoClient,app,globals){
         store: MongoStore.create({
             mongoUrl:globals.mongoDB_access_uri,
             ttl: 60*60*24*14,
+            autoRemove: 'interval',
+            autoRemoveInterval: 15
         })
     }))
 
