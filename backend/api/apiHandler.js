@@ -10,16 +10,6 @@ function api_handler(mongoClient,app,globals){
 
     //** ROUTES **
     let api_router = express.Router()
-    
-
-
-    api_router.use(sessions({
-        secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-        saveUninitialized:true,
-        cookie: { maxAge: 1000 * 60 * 60 *24 },
-        resave: false
-    }))
-
 
 
     const open = require("./api_open/api_openHandler.js")(mongoClient,globals)
