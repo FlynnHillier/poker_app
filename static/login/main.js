@@ -19,7 +19,7 @@ function login_submit(){
         if(response.data.result === true){
             window.location.replace(response.data.next_url)
         }  else{
-            document.getElementById("login_error_message").innerText = response.data.message
+            document.getElementById("error_message").innerText = response.data.message
         }
     })
     .catch((err)=>{
