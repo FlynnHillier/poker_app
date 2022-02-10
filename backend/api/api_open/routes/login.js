@@ -28,7 +28,7 @@ Router
 
         
 
-       config.mongo.mongoose_models.user.findOne({username:"mrbasu"}).then((userInfo)=>{
+       config.mongo.mongoose_models.user.findOne({username:username}).then((userInfo)=>{
             if(userInfo){
 
 
